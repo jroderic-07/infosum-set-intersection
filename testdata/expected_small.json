@@ -1,0 +1,18 @@
+{
+  "files": [
+    {
+      "path": "testdata/small_a.csv",
+      "total_keys": 3,
+      "distinct_keys": 2
+    },
+    {
+      "path": "testdata/small_b.csv",
+      "total_keys": 3,
+      "distinct_keys": 2
+    }
+  ],
+  "overlap": {
+    "total": 2,
+    "distinct": 2
+  }
+}
