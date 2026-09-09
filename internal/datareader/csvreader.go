@@ -6,10 +6,13 @@ import (
 	"io"
 	"os"
 	"set-intersection/internal/datastore"
+	"set-intersection/internal/validator"
+	"strings"
 )
 
 type CSVReader struct {
-	path string
+	path      string
+	validator validator.KeyValidator
 }
 
 func (r *CSVReader) Read(store datastore.DataStore) error {
@@ -32,7 +35,17 @@ func (r *CSVReader) Read(store datastore.DataStore) error {
 			return err
 		}
 
-		key := record[0]
+		if len(record) == 0 {
+			continue
+		}
+
+		key := strings.TrimSpace(record[0])
+
+		if r.validator != nil {
+			if err := r.validator.Validate(key); err != nil {
+				continue
+			}
+		}
 
 		if err := store.Add(key); err != nil {
 			return err
@@ -42,8 +55,9 @@ func (r *CSVReader) Read(store datastore.DataStore) error {
 	return nil
 }
 
-func NewCSVReader(filePath string) *CSVReader {
+func NewCSVReader(filePath string, keyValidator validator.KeyValidator) *CSVReader {
 	return &CSVReader{
-		path: filePath,
+		path:      filePath,
+		validator: keyValidator,
 	}
 }

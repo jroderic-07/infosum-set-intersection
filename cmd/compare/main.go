@@ -10,6 +10,7 @@ import (
 	"set-intersection/internal/dataset"
 	"set-intersection/internal/datastore"
 	"set-intersection/internal/report"
+	"set-intersection/internal/validator"
 	"sync"
 )
 
@@ -31,13 +32,18 @@ func main() {
 		log.Fatal("exactly two input files are required")
 	}
 
+	udprnValidator, err := validator.NewUDPRNValidator()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	datasets := make([]dataset.Dataset, len(config.InputFilePaths))
 
 	for i, path := range config.InputFilePaths {
 		// Store and Reader are both interfaces. The constructor functions return pointers. The interfaces hold the pointers, so method calls affect the original objects.
 		datasets[i] = dataset.Dataset{
 			Store:  datastore.NewFrequencyStore(),
-			Reader: datareader.NewCSVReader(path),
+			Reader: datareader.NewCSVReader(path, udprnValidator),
 		}
 	}
 

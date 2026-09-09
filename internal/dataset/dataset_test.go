@@ -8,7 +8,7 @@ import (
 
 func TestDataset(t *testing.T) {
 	store := datastore.NewFrequencyStore()
-	reader := datareader.NewCSVReader("example.csv")
+	reader := datareader.NewCSVReader("example.csv", nil)
 
 	d := Dataset{
 		Store:  store,

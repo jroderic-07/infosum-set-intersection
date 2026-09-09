@@ -42,18 +42,18 @@ Build output goes to `./bin/compare`. JSON goes to stdout; errors go to stderr.
   "files": [
     {
       "path": "testdata/A_f.csv",
-      "total_keys": 95001,
-      "distinct_keys": 72800
+      "total_keys": 86535,
+      "distinct_keys": 72798
     },
     {
       "path": "testdata/B_f.csv",
-      "total_keys": 80001,
-      "distinct_keys": 72816
+      "total_keys": 72846,
+      "distinct_keys": 72814
     }
   ],
   "overlap": {
-    "total": 65399,
-    "distinct": 58223
+    "total": 58244,
+    "distinct": 58221
   }
 }
 ```
@@ -69,5 +69,5 @@ Build output goes to `./bin/compare`. JSON goes to stdout; errors go to stderr.
 
 - Exactly two input files are required.
 - Each CSV has one column, one key per row.
-- The header row (`udprn` in the sample files) is counted as a key.
+- Only valid 8-digit UDPRN values are loaded. Invalid rows (empty values, headers, malformed keys) are skipped.
 - Blank lines are skipped.
