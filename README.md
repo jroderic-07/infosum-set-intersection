@@ -65,9 +65,10 @@ Build output goes to `./bin/compare`. JSON goes to stdout; errors go to stderr.
 - `overlap.total` — shared key occurrences: sum of `min(countA, countB)` for each key in both files
 - `overlap.distinct` — keys that appear in both files
 
-## Assumptions
+## Data handling
 
-- Exactly two input files are required.
-- Each CSV has one column, one key per row.
-- Only valid 8-digit UDPRN values are loaded. Invalid rows (empty values, headers, malformed keys) are skipped.
-- Blank lines are skipped.
+Each CSV is expected to contain a single column of UDPRN keys, one per row. Keys are stored as strings so leading zeros are preserved (e.g. `08034283`).
+
+Only 8-digit numeric values are loaded. Rows that fail validation are skipped silently — this includes blank lines, empty values (`""`), the `udprn` header row, and malformed keys. The provided test files contain thousands of empty rows; these are excluded from all counts.
+
+Only the first column is read. Extra columns, if present, are ignored. Overlap counts are symmetric — the order of `-in` flags affects report paths only, not the overlap figures.
