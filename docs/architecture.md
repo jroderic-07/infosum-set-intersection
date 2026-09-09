@@ -12,6 +12,7 @@ Core behavior is abstracted behind Go interfaces so individual components can be
 | Component | Interface | Implementation |
 |-----------|-----------|----------------|
 | Reader | `DataReader` | `CSVReader` |
+| Validator | `KeyValidator` | `RegexValidator` |
 | Storage | `DataStore` | `FrequencyStore` |
 | Comparison | `Comparator` | `FrequencyComparator` |
 | Reporting | `Reporter` | `JSONReporter` |

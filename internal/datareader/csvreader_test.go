@@ -4,6 +4,7 @@ import (
 	"os"
 	"path/filepath"
 	"set-intersection/internal/datastore"
+	"set-intersection/internal/validator"
 	"testing"
 )
 
@@ -17,7 +18,7 @@ func TestCSVReader_Read(t *testing.T) {
 	}
 
 	store := datastore.NewFrequencyStore()
-	reader := NewCSVReader(path)
+	reader := NewCSVReader(path, nil)
 
 	if err := reader.Read(store); err != nil {
 		t.Fatalf("Read returned error: %v", err)
@@ -39,7 +40,7 @@ func TestCSVReader_Read(t *testing.T) {
 
 func TestCSVReader_ReadMissingFile(t *testing.T) {
 	store := datastore.NewFrequencyStore()
-	reader := NewCSVReader(filepath.Join(t.TempDir(), "missing.csv"))
+	reader := NewCSVReader(filepath.Join(t.TempDir(), "missing.csv"), nil)
 
 	if err := reader.Read(store); err == nil {
 		t.Fatal("Read should return an error for a missing file")
@@ -53,7 +54,7 @@ func TestCSVReader_ReadEmptyFile(t *testing.T) {
 	}
 
 	store := datastore.NewFrequencyStore()
-	reader := NewCSVReader(path)
+	reader := NewCSVReader(path, nil)
 
 	if err := reader.Read(store); err != nil {
 		t.Fatalf("Read returned error: %v", err)
@@ -71,7 +72,7 @@ func TestCSVReader_ReadSingleRow(t *testing.T) {
 	}
 
 	store := datastore.NewFrequencyStore()
-	reader := NewCSVReader(path)
+	reader := NewCSVReader(path, nil)
 
 	if err := reader.Read(store); err != nil {
 		t.Fatalf("Read returned error: %v", err)
@@ -94,7 +95,31 @@ func TestCSVReader_ReadIgnoresBlankLines(t *testing.T) {
 	}
 
 	store := datastore.NewFrequencyStore()
-	reader := NewCSVReader(path)
+	reader := NewCSVReader(path, nil)
+
+	if err := reader.Read(store); err != nil {
+		t.Fatalf("Read returned error: %v", err)
+	}
+
+	if got := store.GetTotalCount(); got != 2 {
+		t.Errorf("GetTotalCount() = %d, want 2", got)
+	}
+}
+
+func TestCSVReader_SkipsInvalidKeys(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "invalid-keys.csv")
+	content := "08034283\n\nudprn\n71842328\n"
+	if err := os.WriteFile(path, []byte(content), 0o644); err != nil {
+		t.Fatalf("WriteFile returned error: %v", err)
+	}
+
+	udprnValidator, err := validator.NewUDPRNValidator()
+	if err != nil {
+		t.Fatalf("NewUDPRNValidator returned error: %v", err)
+	}
+
+	store := datastore.NewFrequencyStore()
+	reader := NewCSVReader(path, udprnValidator)
 
 	if err := reader.Read(store); err != nil {
 		t.Fatalf("Read returned error: %v", err)
