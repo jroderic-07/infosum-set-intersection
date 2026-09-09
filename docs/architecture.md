@@ -22,7 +22,7 @@ Files are read concurrently using Goroutines. Each ingestion stream writes to it
 
 ## Scaling
 
-The provided datasets are roughly **95,000** and **80,000** rows each. After validation, approximately **86,500** and **72,800** valid UDPRN keys are loaded per file. At this size, the full datasets fit comfortably in memory and the comparison completes in under a second.
+The provided datasets are roughly **95,000** and **80,000** rows each. After validation, approximately **86,535** and **72,846** valid UDPRN keys are loaded per file. At this size, the full datasets fit comfortably in memory and the comparison completes in under a second.
 
 Given these file sizes, a simple approach is sufficient:
 

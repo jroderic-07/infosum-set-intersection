@@ -67,6 +67,8 @@ Build output goes to `./bin/compare`. JSON goes to stdout; errors go to stderr.
 
 ## Data handling
 
+Exactly two input files are required.
+
 Each CSV is expected to contain a single column of UDPRN keys, one per row. Keys are stored as strings so leading zeros are preserved (e.g. `08034283`).
 
 Only 8-digit numeric values are loaded. Rows that fail validation are skipped silently — this includes blank lines, empty values (`""`), the `udprn` header row, and malformed keys. The provided test files contain thousands of empty rows; these are excluded from all counts.
